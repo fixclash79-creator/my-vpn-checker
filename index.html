@@ -1,15 +1,152 @@
-<!doctype html><html lang="km"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101827"><title>My VPN Checker</title><style>
-*{box-sizing:border-box}body{margin:0;padding:22px 16px;background:#0b1220;color:#eef4ff;font-family:-apple-system,BlinkMacSystemFont,sans-serif}main{max-width:560px;margin:auto}h1{font-size:24px}.card{background:#141f31;border:1px solid #293b55;border-radius:18px;padding:17px;margin:14px 0}.muted,.note{color:#a8b7cc;font-size:13px;line-height:1.6}.ip{font-size:25px;font-weight:700;overflow-wrap:anywhere;margin:12px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cell{background:#1b2a40;padding:13px;border-radius:13px;min-width:0}.label{font-size:12px;color:#9fb0c8;margin-bottom:7px}.value{font-weight:600;overflow-wrap:anywhere}button{width:100%;border:0;border-radius:13px;padding:14px;margin-top:10px;background:#3184f6;color:white;font-size:16px;font-weight:700}.secondary{background:#293b55}.ok{color:#6fe0a4}.warn{color:#ffd17c}</style></head><body><main>
-<h1>🌐 My VPN Checker</h1><p class="muted">ពិនិត្យ IP និងការតភ្ជាប់ VPN</p>
-<section class="card"><b id="status">រង់ចាំការពិនិត្យ</b><div class="label">IP Address បច្ចុប្បន្ន</div><div class="ip" id="ip">—</div><p class="muted" id="msg">ចុចពិនិត្យ IP ដើម្បីចាប់ផ្ដើម</p><button id="check">ពិនិត្យ IP ឥឡូវនេះ</button></section>
-<section class="card"><div class="grid"><div class="cell"><div class="label">ប្រទេស</div><div class="value" id="country">—</div></div><div class="cell"><div class="label">ទីក្រុង</div><div class="value" id="city">—</div></div><div class="cell"><div class="label">ISP</div><div class="value" id="isp">—</div></div><div class="cell"><div class="label">ASN</div><div class="value" id="asn">—</div></div><div class="cell"><div class="label">តំបន់</div><div class="value" id="region">—</div></div><div class="cell"><div class="label">Timezone</div><div class="value" id="tz">—</div></div></div></section>
-<section class="card"><b>ប្រៀបធៀប IP មុន និងក្រោយ VPN</b><p class="note">បិទ VPN ហើយរក្សាទុក IP មុន។ បន្ទាប់មកបើក VPN ហើយពិនិត្យ IP ក្រោយ។</p><div class="cell"><div class="label">IP មុន VPN</div><div class="value" id="before">មិនទាន់រក្សាទុក</div></div><button class="secondary" id="save">រក្សាទុក IP មុន VPN</button><div class="cell" style="margin-top:10px"><div class="label">IP ក្រោយ VPN</div><div class="value" id="after">មិនទាន់ពិនិត្យ</div></div><button id="afterBtn">ពិនិត្យ IP ក្រោយ VPN</button><p id="compare" class="note">មិនទាន់មានការប្រៀបធៀប</p></section>
-<section class="card"><b>ពិនិត្យ Singapore</b><p id="sg" class="note">ពិនិត្យ IP ដើម្បីដឹងថាប្រទេសជាអ្វី។</p></section><p class="note">ត្រូវការ Internet ដើម្បីទាញទិន្នន័យពី ipwho.is។ ទីតាំង IP ជាការប៉ាន់ស្មានតាមបណ្ដាញ មិនមែនទីតាំងផ្ទះពិតប្រាកដទេ។</p></main>
+
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My VPN Checker</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 25px 16px;
+  background: #0b1220;
+  color: #edf3ff;
+  font-family: Arial, sans-serif;
+}
+.container {
+  max-width: 700px;
+  margin: auto;
+}
+h1 { font-size: 28px; }
+.subtitle { color: #9cacc3; }
+.card {
+  background: #152238;
+  border: 1px solid #30435d;
+  border-radius: 22px;
+  padding: 25px;
+  margin-top: 22px;
+}
+.ip {
+  font-size: 32px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+  margin: 18px 0;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.item {
+  background: #20314b;
+  border-radius: 15px;
+  padding: 18px 12px;
+  min-width: 0;
+}
+.item p { color: #9cacc3; margin: 0 0 12px; }
+.item strong { overflow-wrap: anywhere; }
+button {
+  width: 100%;
+  padding: 18px;
+  border: 0;
+  border-radius: 14px;
+  background: #3185f5;
+  color: white;
+  font-size: 18px;
+  margin-top: 20px;
+}
+#status {
+  color: #aabbd1;
+  margin-top: 15px;
+}
+footer {
+  text-align: center;
+  color: #8292a8;
+  margin-top: 25px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🌐 My VPN Checker</h1>
+  <p class="subtitle">ពិនិត្យ IP និងទីតាំងបណ្តាញរបស់អ្នក</p>
+
+  <div class="card">
+    <p>IP Address បច្ចុប្បន្ន</p>
+    <div class="ip" id="ip">កំពុងផ្ទុក...</div>
+    <p id="status">កំពុងទាញយកទិន្នន័យ...</p>
+    <button id="checkBtn" onclick="getIP()">ពិនិត្យ IP ម្តងទៀត</button>
+  </div>
+
+  <div class="card grid">
+    <div class="item">
+      <p>ប្រទេស</p>
+      <strong id="country">-</strong>
+    </div>
+    <div class="item">
+      <p>ទីក្រុង</p>
+      <strong id="city">-</strong>
+    </div>
+    <div class="item">
+      <p>ISP / ក្រុមហ៊ុន Internet</p>
+      <strong id="isp">-</strong>
+    </div>
+    <div class="item">
+      <p>តំបន់</p>
+      <strong id="region">-</strong>
+    </div>
+  </div>
+
+  <footer>IP information powered by ipwho.is</footer>
+</div>
+
 <script>
-let before=null;async function get(){let r=await fetch('https://ipwho.is/',{cache:'no-store'});if(!r.ok)throw Error('Network error');let d=await r.json();if(!d.success)throw Error(d.message||'API error');return d}
-function render(d){document.getElementById('ip').textContent=d.ip||'—';[['country',[d.country_code,d.country].filter(Boolean).join(' — ')],['city',d.city],['isp',d.connection?.isp],['asn',d.connection?.asn?'AS'+d.connection.asn:''],['region',d.region],['tz',d.timezone?.id]].forEach(([k,v])=>document.getElementById(k).textContent=v||'—');document.getElementById('status').textContent='បានពិនិត្យ';document.getElementById('msg').textContent='បានទាញទិន្នន័យថ្មី';document.getElementById('sg').innerHTML=d.country_code==='SG'?'<span class="ok">✓ IP ត្រូវបានកំណត់ទីតាំងជា Singapore</span>':'<span class="warn">IP មិនមែន Singapore ទេ៖ '+(d.country||'មិនស្គាល់')+'</span>'}
-async function check(){document.getElementById('status').textContent='កំពុងពិនិត្យ…';let d=await get();render(d);return d}
-document.getElementById('check').onclick=()=>check().catch(e=>{document.getElementById('msg').textContent='Load failed: '+e.message});
-document.getElementById('save').onclick=async()=>{try{let d=await check();before=d.ip;document.getElementById('before').textContent=before;document.getElementById('compare').textContent='បានរក្សាទុក IP មុន VPN។ បើក VPN រួចពិនិត្យម្ដងទៀត។'}catch(e){}};
-document.getElementById('afterBtn').onclick=async()=>{try{let d=await check();document.getElementById('after').textContent=d.ip;document.getElementById('compare').innerHTML=!before?'សូមរក្សាទុក IP មុន VPN ជាមុន។':before===d.ip?'<span class="warn">IP មិនបានផ្លាស់ប្ដូរ។</span>':'<span class="ok">IP បានផ្លាស់ប្ដូរ។ សូមពិនិត្យប្រទេសខាងលើ។</span>'}catch(e){}};check().catch(e=>document.getElementById('msg').textContent='Load failed: '+e.message);
-</script></body></html>
+async function getIP() {
+  const btn = document.getElementById("checkBtn");
+  const status = document.getElementById("status");
+
+  btn.disabled = true;
+  btn.textContent = "កំពុងពិនិត្យ...";
+  status.textContent = "កំពុងទាញយកទិន្នន័យ...";
+
+  try {
+    const response = await fetch("https://ipwho.is/");
+    if (!response.ok) throw new Error("Network error");
+
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.message || "API error");
+    }
+
+    document.getElementById("ip").textContent =
+      data.ip || "មិនមានទិន្នន័យ";
+
+    document.getElementById("country").textContent =
+      data.country || "-";
+
+    document.getElementById("city").textContent =
+      data.city || "-";
+
+    document.getElementById("isp").textContent =
+      data.connection?.isp || "មិនមានទិន្នន័យ";
+
+    document.getElementById("region").textContent =
+      data.region || "-";
+
+    status.textContent = "ទទួលបានទិន្នន័យជោគជ័យ ✓";
+
+  } catch (error) {
+    status.textContent =
+      "មិនអាចទាញយកទិន្នន័យបាន។ សូមព្យាយាមម្តងទៀត។";
+    document.getElementById("ip").textContent = "-";
+  }
+
+  btn.disabled = false;
+  btn.textContent = "ពិនិត្យ IP ម្តងទៀត";
+}
+
+getIP();
+</script>
+</body>
+</html>
