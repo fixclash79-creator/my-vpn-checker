@@ -1,147 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="km">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ffffff">
-<title>Video Player - Free Video Saver</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f8ff">
+<title>ClipFlow — Video Preview & Saver</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#111a32;--muted:#52627c;--purple:#5035f5;--pink:#ec009c;--line:#d7deeb}
+:root{--ink:#12172b;--muted:#66708a;--line:#e5e8f2;--violet:#5b45f5;--pink:#e927a8;--surface:#fff;--shadow:0 18px 55px rgba(43,49,94,.10)}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;color:var(--ink);font-family:"Kantumruy Pro",system-ui,sans-serif;background:radial-gradient(ellipse at 5% 20%,#d9efff 0,transparent 38%),radial-gradient(ellipse at 95% 12%,#e2ddff 0,transparent 38%),linear-gradient(180deg,#f8fbff,#fff 70%);line-height:1.6}
-header{height:82px;background:rgba(255,255,255,.9);border-bottom:1px solid #e8edf5;display:flex;align-items:center}
-.wrap{width:min(900px,calc(100% - 32px));margin:auto}
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:12px;font-size:1.45rem;font-weight:800;letter-spacing:-.03em}
-.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(140deg,#6650ff,#3b22db);color:white;display:grid;place-items:center;box-shadow:0 4px 12px #5540d54a;font-size:25px}
-.consult{border:0;border-radius:14px;padding:12px 20px;color:#fff;background:linear-gradient(100deg,#d91df2,#ec008c);font:inherit;font-weight:700}
-main{padding:58px 0 48px;text-align:center}
-h1{font-size:clamp(2.1rem,7vw,3.45rem);line-height:1.15;letter-spacing:-.04em;margin:12px 0 20px;font-weight:800}
-.lead{font-size:clamp(1.05rem,3.4vw,1.45rem);color:#465873;max-width:690px;margin:0 auto}
-.promise{color:#5035f5;font-size:1.2rem;font-weight:600;margin:4px 0 42px}
-form{max-width:740px;margin:auto}
-.inputrow{height:76px;border:2px solid #d2dced;border-radius:22px;background:#ffffffb8;display:flex;align-items:center;padding:0 18px 0 28px;gap:10px}
-input{border:0;outline:0;background:transparent;min-width:0;flex:1;font:inherit;font-size:1.1rem;color:var(--ink)}
-input::placeholder{color:#718096}
-.paste{border:0;background:transparent;color:#526783;font:inherit;font-weight:600;padding:8px;white-space:nowrap}
-.download{width:100%;height:76px;margin-top:16px;border:0;border-radius:22px;background:linear-gradient(100deg,#5035f5,#4934f4);color:white;font:inherit;font-size:1.35rem;font-weight:700;box-shadow:0 8px 18px #5035f52b}
-button{cursor:pointer}
-button:active{transform:translateY(1px)}
-#message{margin:16px auto 0;max-width:740px;text-align:left;border-radius:14px;padding:14px 16px;background:#fff;border:1px solid #dce4f1;color:#33445f;display:none}
-#message.show{display:block}
-#message a{color:#5035f5;font-weight:700}
-.platforms{max-width:740px;margin:76px auto 0;text-align:left}
-h2{font-size:1.55rem;margin:0 0 18px}
-.pills{display:flex;flex-wrap:wrap;gap:12px}
-.pill{display:flex;align-items:center;gap:9px;border-radius:30px;padding:8px 17px;background:#eef2f8;color:#34445e;font-size:1.08rem}
-.pill b{font-size:1.15rem}
-.note{margin:40px auto 0;max-width:740px;text-align:left;background:#fff;border:1px solid #e0e6f0;border-radius:16px;padding:16px 18px;color:#53627a;font-size:.93rem}
-.note strong{color:#263550}
-footer{text-align:center;color:#718096;font-size:.85rem;padding:30px 16px 42px}
-@media(max-width:560px){header{height:76px}.brand{font-size:1.2rem}.logo{width:44px;height:44px}.consult{padding:10px 13px;font-size:.9rem}main{padding:44px 0 36px}.inputrow{height:68px;padding-left:15px;border-radius:18px}input{font-size:.95rem}.paste{font-size:.9rem;padding:5px}.download{height:68px;border-radius:18px;font-size:1.2rem}.platforms{margin-top:58px}.pill{font-size:.98rem;padding:7px 14px}.note{font-size:.88rem}}
+body{margin:0;color:var(--ink);font-family:"Kantumruy Pro",Inter,system-ui,sans-serif;background:radial-gradient(ellipse at 8% 5%,#e2f4ff 0,transparent 34%),radial-gradient(ellipse at 95% 7%,#ece5ff 0,transparent 36%),#f8f9ff;min-height:100vh}
+header{height:78px;display:flex;align-items:center;border-bottom:1px solid #e9ebf5;background:#ffffffd9;backdrop-filter:blur(18px);position:sticky;top:0;z-index:5}
+.wrap{width:min(920px,calc(100% - 32px));margin:auto}
+.nav{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font:800 1.3rem Inter,sans-serif;letter-spacing:-.04em}
+.logo{width:44px;height:44px;display:grid;place-items:center;border-radius:15px;color:#fff;background:linear-gradient(145deg,#7967ff,#4931e8);box-shadow:0 8px 18px #5b45f540;font-size:23px}
+.navtag{font-size:.9rem;color:#5d50dc;background:#f0edff;border:1px solid #e4dfff;border-radius:30px;padding:8px 14px;font-weight:700}
+main{padding:54px 0 48px}
+.hero{text-align:center;max-width:760px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid #e5e0ff;background:#fff;padding:7px 13px;border-radius:30px;color:#5d50dc;font-weight:700;font-size:.84rem}
+h1{font:800 clamp(2.2rem,7vw,3.8rem)/1.1 Inter,"Kantumruy Pro",sans-serif;letter-spacing:-.065em;margin:20px 0 14px}
+h1 span{background:linear-gradient(100deg,#513af0,#df26a8);background-clip:text;color:transparent}
+.lead{font-size:1.13rem;line-height:1.8;color:#59647e;max-width:650px;margin:0 auto}
+.searchbox{max-width:760px;margin:32px auto 0;padding:9px;border:1px solid #e0e4f0;background:#ffffffdf;border-radius:23px;box-shadow:var(--shadow)}
+.inputrow{display:flex;align-items:center;gap:8px;padding:5px 8px 5px 15px}
+input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:var(--ink);font:500 1rem Inter,"Kantumruy Pro",sans-serif;padding:12px 4px}
+input::placeholder{color:#98a0b3}
+.paste{border:0;background:#f2f3fa;color:#59647e;border-radius:12px;padding:10px 13px;font:700 .9rem "Kantumruy Pro",sans-serif;white-space:nowrap}
+.submit{width:100%;border:0;border-radius:16px;padding:16px;background:linear-gradient(100deg,#5a43f4,#7548f5 60%,#d82cae);color:#fff;font:700 1.08rem "Kantumruy Pro",sans-serif;box-shadow:0 9px 20px #6549f533}
+button{cursor:pointer}button:active{transform:translateY(1px)}
+.platforms{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:23px auto 0}
+.platform{border:1px solid #e7e9f1;background:#ffffffb8;color:#52607a;border-radius:30px;padding:7px 13px;font-size:.9rem}
+#status{display:none;max-width:760px;margin:18px auto 0;border-radius:14px;padding:13px 16px;background:#fff;border:1px solid var(--line);color:#4b5872}
+#status.show{display:block}
+.result{display:none;max-width:760px;margin:24px auto 0;background:var(--surface);border:1px solid #e6e9f2;border-radius:25px;box-shadow:var(--shadow);overflow:hidden;text-align:left}
+.result.show{display:block}
+.resulthead{padding:20px 22px 16px;display:flex;align-items:flex-start;gap:14px}
+.sourceicon{flex:none;width:43px;height:43px;border-radius:14px;background:#f0edff;color:#5c49ed;display:grid;place-items:center;font:800 1.1rem Inter,sans-serif}
+.resultname{font-weight:800;font-size:1.1rem}
+.resulturl{font:500 .82rem Inter,sans-serif;color:#8992a6;overflow-wrap:anywhere;margin-top:4px}
+.playerwrap{margin:0 18px;background:#0b1020;border-radius:17px;overflow:hidden;min-height:180px;display:flex;justify-content:center;align-items:center}
+.playerwrap iframe,.playerwrap video{display:block;width:100%;aspect-ratio:16/9;border:0;background:#080d18}
+.playerwrap .portrait{aspect-ratio:9/16;max-width:430px}
+.resultfoot{padding:18px 22px 22px}
+.resultfoot h2{font-size:1.05rem;margin:0 0 6px}
+.resultfoot p{font-size:.91rem;line-height:1.75;color:#6b748a;margin:0}
+.downloadrow{display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:16px;align-items:center;justify-content:space-between;gap:12px}
+.downloadrow.show{display:flex}
+.filebtn{display:inline-flex;align-items:center;gap:8px;background:#151b30;color:#fff;text-decoration:none;border-radius:13px;padding:11px 16px;font-weight:700}
+.tip{max-width:760px;margin:28px auto 0;padding:17px 19px;border:1px solid #e7e9f2;background:#ffffffa8;border-radius:17px;color:#68738a;font-size:.88rem;line-height:1.8}
+.tip strong{color:#303a54}
+footer{text-align:center;color:#98a0b1;padding:24px 16px 36px;font:500 .8rem Inter,sans-serif}
+@media(max-width:560px){header{height:68px}.brand{font-size:1.12rem}.logo{width:40px;height:40px}main{padding:38px 0 34px}.lead{font-size:1rem}.searchbox{margin-top:24px;padding:7px;border-radius:19px}.inputrow{padding-left:8px}input{font-size:.9rem}.paste{padding:9px;font-size:.82rem}.submit{padding:14px}.result{border-radius:20px}.resulthead{padding:16px}.playerwrap{margin:0 12px}.resultfoot{padding:16px}.downloadrow{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
-<header><div class="wrap head">
-  <div class="brand"><span class="logo">⇩</span><span>Video Saver</span></div>
-  <button class="consult" type="button" onclick="document.getElementById('help').scrollIntoView({behavior:'smooth'})">របៀបប្រើ</button>
-</div></header>
+<header><div class="wrap nav"><div class="brand"><span class="logo">▶</span><span>ClipFlow</span></div><span class="navtag">VIDEO TOOLS · 2026</span></div></header>
 <main class="wrap">
-  <h1>Free Video Saver</h1>
-  <p class="lead">បិទភ្ជាប់ Link ពី YouTube, TikTok, Facebook ឬ Telegram ហើយចាក់មើលវីដេអូនៅក្នុងវេបសាយផ្ទាល់។</p>
-  <p class="promise">បិទភ្ជាប់ Link · ចុចបង្ហាញ · ចាក់មើលភ្លាមៗ</p>
-  <form id="form">
-    <div class="inputrow">
-      <input id="url" type="url" inputmode="url" autocomplete="url" placeholder="បិទភ្ជាប់ Link វីដេអូទីនេះ..." required>
-      <button class="paste" type="button" id="paste">▣ បិទភ្ជាប់</button>
-    </div>
-    <button class="download" type="submit">▶　បង្ហាញវីដេអូ</button>
-  </form>
-  <div id="message" role="status" aria-live="polite"></div>
-  <section id="playerSection" style="display:none;max-width:740px;margin:24px auto 0;text-align:left">
-    <h2 id="playerTitle">វីដេអូរបស់អ្នក</h2>
-    <div id="player" style="width:100%;overflow:hidden;border-radius:18px;background:#080d18;min-height:180px;display:flex;justify-content:center;align-items:center"></div>
-  </section>
-  <section class="platforms">
-    <h2>Supported platforms</h2>
-    <div class="pills">
-      <span class="pill"><b style="color:#f00">▶</b>YouTube</span>
-      <span class="pill"><b style="color:#111">♪</b>TikTok</span>
-      <span class="pill"><b style="color:#1877f2">f</b>Facebook</span>
-      <span class="pill"><b style="color:#229ed9">➤</b>Telegram</span>
-    </div>
-  </section>
-  <section class="note" id="help">
-    <strong>ចំណាំ៖</strong> វីដេអូត្រូវតែជាសាធារណៈ និងអនុញ្ញាតឲ្យបង្កប់ (Embed)។ Link ខ្លីរបស់ TikTok, វីដេអូឯកជន ឬវីដេអូដែលម្ចាស់បានបិទការបង្កប់ អាចមិនបង្ហាញក្នុង Player បានទេ។
-  </section>
+<section class="hero">
+ <div class="eyebrow">✦ Simple · Fast · Mobile friendly</div>
+ <h1>Your videos, <span>one place.</span></h1>
+ <p class="lead">បិទភ្ជាប់ Link វីដេអូពី YouTube, TikTok, Facebook ឬ Telegram ដើម្បីបង្ហាញ និងចាក់មើលនៅក្នុងវេបសាយនេះ។</p>
+ <form class="searchbox" id="form">
+  <div class="inputrow"><input id="url" type="url" inputmode="url" autocomplete="url" placeholder="Paste video link here..." required><button class="paste" type="button" id="paste">▣ Paste</button></div>
+  <button class="submit" type="submit">▶　បង្ហាញវីដេអូ</button>
+ </form>
+ <div class="platforms"><span class="platform">▶ YouTube</span><span class="platform">♪ TikTok</span><span class="platform">f Facebook</span><span class="platform">➤ Telegram</span></div>
+</section>
+<div id="status" role="status" aria-live="polite"></div>
+<section class="result" id="result">
+ <div class="resulthead"><div class="sourceicon" id="sourceIcon">▶</div><div style="min-width:0"><div class="resultname" id="resultName">Video preview</div><div class="resulturl" id="resultUrl"></div></div></div>
+ <div class="playerwrap" id="player"></div>
+ <div class="resultfoot"><h2>វីដេអូរបស់អ្នក</h2><p id="resultNote">ចាក់មើលវីដេអូនៅទីនេះ។</p>
+  <div class="downloadrow" id="downloadRow"><span><strong>Original video file</strong><br><small style="color:#8791a7">Direct MP4 / WebM</small></span><a class="filebtn" id="downloadLink" href="#" download>⇩ Download</a></div>
+ </div>
+</section>
+<section class="tip"><strong>ចំណាំអំពី Download៖</strong> គុណភាព 1080p, 720p និង MP3 មិនអាចបង្កើតពី Link ធម្មតាដោយផ្នែក Website តែមួយបានទេ។ វាត្រូវការសេវាកម្ម Backend ដែលមានសិទ្ធិ និងការអនុញ្ញាតពីវេទិកា។ នៅទីនេះ Player នឹងបង្ហាញតែវីដេអូសាធារណៈដែលវេទិកាអនុញ្ញាតឲ្យ Embed។ សម្រាប់ឯកសារ MP4/WebM ផ្ទាល់ វានឹងបង្ហាញប៊ូតុង Download។</section>
 </main>
-<footer>Video Saver · ប្រើប្រាស់ដោយគោរពសិទ្ធិម្ចាស់មាតិកា</footer>
+<footer>ClipFlow © 2026 · Respect creators and platform permissions</footer>
 <script>
-const $=s=>document.querySelector(s), msg=$('#message'), player=$('#player'), section=$('#playerSection');
-function showMessage(t){msg.textContent=t;msg.classList.add('show')}
-function platform(u){
- const h=u.hostname.toLowerCase().replace(/^www\./,'');
- if(h.includes('youtu.be')||h.includes('youtube.com'))return 'YouTube';
- if(h.includes('tiktok.com'))return 'TikTok';
- if(h.includes('facebook.com')||h==='fb.watch')return 'Facebook';
- if(h.includes('t.me')||h.includes('telegram.me')||h.includes('telegram.org'))return 'Telegram';
- return 'other';
-}
-function makeFrame(src,title,ratio='16/9'){
- const f=document.createElement('iframe');
- f.src=src; f.title=title; f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin';
- f.style.cssText='display:block;width:100%;aspect-ratio:'+ratio+';border:0;background:#080d18';
- return f;
-}
-function showPlayer(u,p){
- player.replaceChildren(); section.style.display='block'; $('#playerTitle').textContent='កំពុងបង្ហាញវីដេអូ '+p;
+const $=s=>document.querySelector(s),statusBox=$('#status'),result=$('#result'),player=$('#player'),downloadRow=$('#downloadRow');
+function status(t){statusBox.textContent=t;statusBox.classList.add('show')}
+function platform(u){const h=u.hostname.toLowerCase().replace(/^www\./,'');if(h.includes('youtu.be')||h.includes('youtube.com'))return'YouTube';if(h.includes('tiktok.com'))return'TikTok';if(h.includes('facebook.com')||h==='fb.watch')return'Facebook';if(h==='t.me'||h.endsWith('.t.me')||h.includes('telegram.me'))return'Telegram';return'other'}
+function frame(src,title,portrait=false){const f=document.createElement('iframe');f.src=src;f.title=title;f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';f.allowFullscreen=true;f.referrerPolicy='strict-origin-when-cross-origin';if(portrait)f.className='portrait';return f}
+function clear(){player.replaceChildren();downloadRow.classList.remove('show');$('#resultNote').textContent='ចាក់មើលវីដេអូនៅទីនេះ។'}
+function showResult(u,p){
+ clear();result.classList.add('show');$('#resultName').textContent=p+' video';$('#resultUrl').textContent=u.href;$('#sourceIcon').textContent=({YouTube:'▶',TikTok:'♪',Facebook:'f',Telegram:'➤'})[p]||'▶';
+ if(/\.(mp4|webm|ogg|mov)$/i.test(u.pathname)){
+  const v=document.createElement('video');v.src=u.href;v.controls=true;v.playsInline=true;player.append(v);$('#resultNote').textContent='ឯកសារវីដេអូផ្ទាល់។ អ្នកអាចចាក់មើល ឬរក្សាទុកឯកសារនេះ។';$('#downloadLink').href=u.href;downloadRow.classList.add('show');return;
+ }
  if(p==='YouTube'){
-  let id='';
-  if(u.hostname.includes('youtu.be')) id=u.pathname.split('/').filter(Boolean)[0]||'';
-  else if(u.pathname.startsWith('/shorts/')) id=u.pathname.split('/')[2]||'';
-  else if(u.pathname.startsWith('/embed/')) id=u.pathname.split('/')[2]||'';
+  let id='';const path=u.pathname.split('/').filter(Boolean);
+  if(u.hostname.includes('youtu.be'))id=path[0]||'';
+  else if(['shorts','embed','live','v'].includes(path[0]))id=path[1]||'';
   else id=u.searchParams.get('v')||'';
-  if(!/^[\w-]{11}$/.test(id)){showMessage('មិនអាចស្គាល់លេខសម្គាល់ YouTube ពី Link នេះបានទេ។ សូមប្រើ Link វីដេអូធម្មតា។');return}
-  player.append(makeFrame('https://www.youtube-nocookie.com/embed/'+id,'YouTube video'));
-  showMessage('បានបង្ហាញ YouTube Player។ ចុច Play ដើម្បីមើលវីដេអូ។');
+  if(!/^[\w-]{11}$/.test(id)){status('មិនអាចស្គាល់ Video ID ពី Link នេះទេ។ សូមចម្លង Link វីដេអូ YouTube ពេញ។');return}
+  player.append(frame('https://www.youtube-nocookie.com/embed/'+id,'YouTube video'));$('#resultNote').textContent='YouTube Player · ប្រសិនបើវីដេអូសាធារណៈ និងមិនបានបិទការបង្កប់ អ្នកអាចចាក់មើលនៅទីនេះ។';
  }else if(p==='TikTok'){
   const m=u.pathname.match(/\/video\/(\d+)/);
-  if(!m){showMessage('Link TikTok ខ្លីនេះមិនទាន់អាចបង្ហាញក្នុង Player បានទេ។ សូមបើក Link ក្នុង TikTok ហើយចម្លង Link ពេញដែលមាន /video/លេខ។');return}
-  player.append(makeFrame('https://www.tiktok.com/player/v1/'+m[1]+'?music_info=1&description=1','TikTok video','9/16'));
-  showMessage('បានបង្កើត TikTok Player។ ប្រសិនបើម្ចាស់វីដេអូអនុញ្ញាតឲ្យ Embed វានឹងចាក់នៅទីនេះ។');
+  if(!m){status('Link TikTok ខ្លីត្រូវបើកម្តងក្នុង TikTok ហើយចម្លង Link ពេញដែលមាន /video/លេខ។');return}
+  player.append(frame('https://www.tiktok.com/player/v1/'+m[1]+'?music_info=1&description=1','TikTok video',true));$('#resultNote').textContent='TikTok Player · ត្រូវការវីដេអូសាធារណៈដែលអនុញ្ញាតឲ្យ Embed។';
  }else if(p==='Facebook'){
-  const src='https://www.facebook.com/plugins/video.php?href='+encodeURIComponent(u.href)+'&show_text=0&width=560';
-  player.append(makeFrame(src,'Facebook video'));
-  showMessage('បានបង្កើត Facebook Player។ វីដេអូសាធារណៈដែលអនុញ្ញាតឲ្យ Embed ទើបអាចចាក់បាន។');
+  player.append(frame('https://www.facebook.com/plugins/video.php?href='+encodeURIComponent(u.href)+'&show_text=0&width=560','Facebook video'));$('#resultNote').textContent='Facebook Player · វីដេអូត្រូវតែសាធារណៈ និងអនុញ្ញាតឲ្យ Embed។';
  }else if(p==='Telegram'){
-  let parts=u.pathname.split('/').filter(Boolean);
-  if(parts[0]==='s')parts=parts.slice(1);
-  if(parts.length>=2 && /^\d+$/.test(parts[1])){
-   const box=document.createElement('div'); box.style.cssText='width:100%;background:white;padding:12px;min-height:180px;text-align:center';
-   const widget=document.createElement('script'); widget.async=true; widget.src='https://telegram.org/js/telegram-widget.js?22'; widget.setAttribute('data-telegram-post',parts[0]+'/'+parts[1]); widget.setAttribute('data-width','100%');
-   box.append(widget); player.append(box);
-   showMessage('បានបញ្ចូល Telegram Player។ ត្រូវប្រើ Link Post សាធារណៈពី Channel ឬ Group។');
-  }else showMessage('Telegram ត្រូវការ Link Post សាធារណៈដែលមានទម្រង់ t.me/channel/លេខសារ។ Link ឯកជនមិនអាច Embed បានទេ។');
- }else{
-  showMessage('មិនស្គាល់ប្រភព Link នេះទេ។ សូមដាក់ Link YouTube, TikTok, Facebook ឬ Telegram។');
+  let parts=u.pathname.split('/').filter(Boolean);if(parts[0]==='s')parts=parts.slice(1);
+  if(parts.length<2||!/^\d+$/.test(parts[1])){status('Telegram ត្រូវការ Link Post សាធារណៈ ដូចជា t.me/channelname/123។');return}
+  const box=document.createElement('div');box.style.cssText='width:100%;background:white;padding:12px;min-height:160px';const s=document.createElement('script');s.async=true;s.src='https://telegram.org/js/telegram-widget.js?22';s.setAttribute('data-telegram-post',parts[0]+'/'+parts[1]);s.setAttribute('data-width','100%');box.append(s);player.append(box);$('#resultNote').textContent='Telegram post embed · ត្រូវការសារ ឬវីដេអូក្នុង Channel សាធារណៈ។';
  }
- section.scrollIntoView({behavior:'smooth',block:'start'});
+ result.scrollIntoView({behavior:'smooth',block:'start'});
 }
-$('#paste').addEventListener('click',async()=>{
- try{$('#url').value=await navigator.clipboard.readText();$('#url').focus()}
- catch(e){showMessage('សូមចុចប្រអប់ Link ឲ្យជាប់ រួចជ្រើសរើស Paste។')}
-});
-$('#form').addEventListener('submit',e=>{
- e.preventDefault(); let u;
- try{u=new URL($('#url').value.trim());if(!['http:','https:'].includes(u.protocol))throw 0}
- catch(e){showMessage('សូមបញ្ចូល Link ត្រឹមត្រូវដែលចាប់ផ្តើមដោយ https://');return}
- const p=platform(u);
- if(p==='other'){showMessage('សូមប្រើ Link ពី YouTube, TikTok, Facebook ឬ Telegram។');return}
- showPlayer(u,p);
-});
+$('#paste').addEventListener('click',async()=>{try{$('#url').value=await navigator.clipboard.readText();$('#url').focus()}catch(e){status('សូមចុចប្រអប់ Link ឲ្យជាប់ រួចជ្រើសរើស Paste។')}});
+$('#form').addEventListener('submit',e=>{e.preventDefault();let u;try{u=new URL($('#url').value.trim());if(!['http:','https:'].includes(u.protocol))throw 0}catch(e){status('សូមបញ្ចូល Link ត្រឹមត្រូវដែលចាប់ផ្តើមដោយ https://');return}const p=platform(u);if(p==='other'){status('សូមប្រើ Link YouTube, TikTok, Facebook ឬ Telegram។');return}status('បានពិនិត្យ Link រួច។ កំពុងរៀបចំ Player...');showResult(u,p)});
 </script>
 </body>
 </html>
