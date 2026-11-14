@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#ffffff">
-<title>Free Video Saver</title>
+<title>Video Player - Free Video Saver</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -51,16 +51,20 @@ footer{text-align:center;color:#718096;font-size:.85rem;padding:30px 16px 42px}
 </div></header>
 <main class="wrap">
   <h1>Free Video Saver</h1>
-  <p class="lead">ដាក់ Link វីដេអូពី YouTube, TikTok, Facebook ឬ Telegram ដើម្បីពិនិត្យជម្រើសរក្សាទុកវីដេអូ។</p>
-  <p class="promise">ងាយស្រួលប្រើ · មិនចាំបាច់ដំឡើង App</p>
+  <p class="lead">បិទភ្ជាប់ Link ពី YouTube, TikTok, Facebook ឬ Telegram ហើយចាក់មើលវីដេអូនៅក្នុងវេបសាយផ្ទាល់។</p>
+  <p class="promise">បិទភ្ជាប់ Link · ចុចបង្ហាញ · ចាក់មើលភ្លាមៗ</p>
   <form id="form">
     <div class="inputrow">
       <input id="url" type="url" inputmode="url" autocomplete="url" placeholder="បិទភ្ជាប់ Link វីដេអូទីនេះ..." required>
       <button class="paste" type="button" id="paste">▣ បិទភ្ជាប់</button>
     </div>
-    <button class="download" type="submit">⇩　ពិនិត្យ Link / Download</button>
+    <button class="download" type="submit">▶　បង្ហាញវីដេអូ</button>
   </form>
   <div id="message" role="status" aria-live="polite"></div>
+  <section id="playerSection" style="display:none;max-width:740px;margin:24px auto 0;text-align:left">
+    <h2 id="playerTitle">វីដេអូរបស់អ្នក</h2>
+    <div id="player" style="width:100%;overflow:hidden;border-radius:18px;background:#080d18;min-height:180px;display:flex;justify-content:center;align-items:center"></div>
+  </section>
   <section class="platforms">
     <h2>Supported platforms</h2>
     <div class="pills">
@@ -71,43 +75,72 @@ footer{text-align:center;color:#718096;font-size:.85rem;padding:30px 16px 42px}
     </div>
   </section>
   <section class="note" id="help">
-    <strong>ចំណាំសំខាន់៖</strong> វេបសាយនេះអាចទាញយកឯកសារវីដេអូផ្ទាល់ (.mp4/.webm) ឬបើកទៅកាន់កម្មវិធីដើម ដើម្បីប្រើមុខងារ Save/Download ដែលម្ចាស់វីដេអូ និងវេទិកាអនុញ្ញាត។ វាមិនអាចទាញយកគ្រប់វីដេអូពីគ្រប់វេទិកាដោយស្វ័យប្រវត្តិបានទេ។ សូមទាញយកតែវីដេអូដែលអ្នកជាម្ចាស់ ឬមានសិទ្ធិរក្សាទុក។
+    <strong>ចំណាំ៖</strong> វីដេអូត្រូវតែជាសាធារណៈ និងអនុញ្ញាតឲ្យបង្កប់ (Embed)។ Link ខ្លីរបស់ TikTok, វីដេអូឯកជន ឬវីដេអូដែលម្ចាស់បានបិទការបង្កប់ អាចមិនបង្ហាញក្នុង Player បានទេ។
   </section>
 </main>
 <footer>Video Saver · ប្រើប្រាស់ដោយគោរពសិទ្ធិម្ចាស់មាតិកា</footer>
 <script>
-const $=s=>document.querySelector(s), msg=$('#message');
-function show(html){msg.innerHTML=html;msg.classList.add('show')}
+const $=s=>document.querySelector(s), msg=$('#message'), player=$('#player'), section=$('#playerSection');
+function showMessage(t){msg.textContent=t;msg.classList.add('show')}
 function platform(u){
-  const h=new URL(u).hostname.toLowerCase().replace(/^www\./,'');
-  if(h.includes('youtu.be')||h.includes('youtube.com'))return 'YouTube';
-  if(h.includes('tiktok.com'))return 'TikTok';
-  if(h.includes('facebook.com')||h==='fb.watch')return 'Facebook';
-  if(h.includes('t.me')||h.includes('telegram.me')||h.includes('telegram.org'))return 'Telegram';
-  return 'other';
+ const h=u.hostname.toLowerCase().replace(/^www\./,'');
+ if(h.includes('youtu.be')||h.includes('youtube.com'))return 'YouTube';
+ if(h.includes('tiktok.com'))return 'TikTok';
+ if(h.includes('facebook.com')||h==='fb.watch')return 'Facebook';
+ if(h.includes('t.me')||h.includes('telegram.me')||h.includes('telegram.org'))return 'Telegram';
+ return 'other';
+}
+function makeFrame(src,title,ratio='16/9'){
+ const f=document.createElement('iframe');
+ f.src=src; f.title=title; f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin';
+ f.style.cssText='display:block;width:100%;aspect-ratio:'+ratio+';border:0;background:#080d18';
+ return f;
+}
+function showPlayer(u,p){
+ player.replaceChildren(); section.style.display='block'; $('#playerTitle').textContent='កំពុងបង្ហាញវីដេអូ '+p;
+ if(p==='YouTube'){
+  let id='';
+  if(u.hostname.includes('youtu.be')) id=u.pathname.split('/').filter(Boolean)[0]||'';
+  else if(u.pathname.startsWith('/shorts/')) id=u.pathname.split('/')[2]||'';
+  else if(u.pathname.startsWith('/embed/')) id=u.pathname.split('/')[2]||'';
+  else id=u.searchParams.get('v')||'';
+  if(!/^[\w-]{11}$/.test(id)){showMessage('មិនអាចស្គាល់លេខសម្គាល់ YouTube ពី Link នេះបានទេ។ សូមប្រើ Link វីដេអូធម្មតា។');return}
+  player.append(makeFrame('https://www.youtube-nocookie.com/embed/'+id,'YouTube video'));
+  showMessage('បានបង្ហាញ YouTube Player។ ចុច Play ដើម្បីមើលវីដេអូ។');
+ }else if(p==='TikTok'){
+  const m=u.pathname.match(/\/video\/(\d+)/);
+  if(!m){showMessage('Link TikTok ខ្លីនេះមិនទាន់អាចបង្ហាញក្នុង Player បានទេ។ សូមបើក Link ក្នុង TikTok ហើយចម្លង Link ពេញដែលមាន /video/លេខ។');return}
+  player.append(makeFrame('https://www.tiktok.com/player/v1/'+m[1]+'?music_info=1&description=1','TikTok video','9/16'));
+  showMessage('បានបង្កើត TikTok Player។ ប្រសិនបើម្ចាស់វីដេអូអនុញ្ញាតឲ្យ Embed វានឹងចាក់នៅទីនេះ។');
+ }else if(p==='Facebook'){
+  const src='https://www.facebook.com/plugins/video.php?href='+encodeURIComponent(u.href)+'&show_text=0&width=560';
+  player.append(makeFrame(src,'Facebook video'));
+  showMessage('បានបង្កើត Facebook Player។ វីដេអូសាធារណៈដែលអនុញ្ញាតឲ្យ Embed ទើបអាចចាក់បាន។');
+ }else if(p==='Telegram'){
+  let parts=u.pathname.split('/').filter(Boolean);
+  if(parts[0]==='s')parts=parts.slice(1);
+  if(parts.length>=2 && /^\d+$/.test(parts[1])){
+   const box=document.createElement('div'); box.style.cssText='width:100%;background:white;padding:12px;min-height:180px;text-align:center';
+   const widget=document.createElement('script'); widget.async=true; widget.src='https://telegram.org/js/telegram-widget.js?22'; widget.setAttribute('data-telegram-post',parts[0]+'/'+parts[1]); widget.setAttribute('data-width','100%');
+   box.append(widget); player.append(box);
+   showMessage('បានបញ្ចូល Telegram Player។ ត្រូវប្រើ Link Post សាធារណៈពី Channel ឬ Group។');
+  }else showMessage('Telegram ត្រូវការ Link Post សាធារណៈដែលមានទម្រង់ t.me/channel/លេខសារ។ Link ឯកជនមិនអាច Embed បានទេ។');
+ }else{
+  showMessage('មិនស្គាល់ប្រភព Link នេះទេ។ សូមដាក់ Link YouTube, TikTok, Facebook ឬ Telegram។');
+ }
+ section.scrollIntoView({behavior:'smooth',block:'start'});
 }
 $('#paste').addEventListener('click',async()=>{
-  try{$('#url').value=await navigator.clipboard.readText();$('#url').focus()}
-  catch(e){show('Safari មិនអនុញ្ញាតឲ្យអាន Clipboard ដោយស្វ័យប្រវត្តិទេ។ សូមចុចប្រអប់ Link ឲ្យជាប់ រួចជ្រើសរើស Paste។')}
+ try{$('#url').value=await navigator.clipboard.readText();$('#url').focus()}
+ catch(e){showMessage('សូមចុចប្រអប់ Link ឲ្យជាប់ រួចជ្រើសរើស Paste។')}
 });
 $('#form').addEventListener('submit',e=>{
-  e.preventDefault();
-  let u;
-  try{u=new URL($('#url').value.trim());if(!['http:','https:'].includes(u.protocol))throw 0}
-  catch(e){show('សូមបញ្ចូល Link ត្រឹមត្រូវដែលចាប់ផ្តើមដោយ https://');return}
-  const raw=u.href, p=platform(raw);
-  if(/\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(u.pathname)){
-    show('បានស្គាល់ Link ឯកសារវីដេអូផ្ទាល់។ ប្រសិនបើម៉ាស៊ីនមេអនុញ្ញាត អ្នកអាចចុចខាងក្រោមដើម្បីរក្សាទុក។<br><br><a id="direct" href="'+raw.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" download>⇩ រក្សាទុកឯកសារវីដេអូ</a>');
-    return;
-  }
-  const how={
-    YouTube:'សម្រាប់ YouTube៖ ប្រើប៊ូតុង Download ក្នុងកម្មវិធី YouTube ប្រសិនបើវីដេអូនោះអនុញ្ញាត ឬទាញយកវីដេអូដែលអ្នកបានបង្ហោះដោយខ្លួនឯងតាម YouTube Studio។',
-    TikTok:'សម្រាប់ TikTok៖ បើកវីដេអូ ហើយចុច Share → Save video ប្រសិនបើម្ចាស់វីដេអូបានអនុញ្ញាត។',
-    Facebook:'សម្រាប់ Facebook៖ បើកវីដេអូក្នុង Facebook ហើយប្រើជម្រើស Save/Download ដែលមានសម្រាប់វីដេអូនោះ ឬទាញយកឯកសារដើមពីគណនីរបស់អ្នក។',
-    Telegram:'សម្រាប់ Telegram៖ បើក Link ក្នុង Telegram រួចចុច Download លើវីដេអូ ប្រសិនបើការកំណត់ឆានែល/ម្ចាស់មាតិកាអនុញ្ញាត។',
-    other:'Link នេះមិនមែនជាប្រភពដែលស្គាល់ទេ។ ប្រសិនបើវាជា Link ឯកសារ .mp4 ឬ .webm ផ្ទាល់ សូមបញ្ចូល Link ឯកសារនោះ។'
-  };
-  show('<strong>'+p+'</strong><br>'+how[p]+'<br><br><a href="'+raw.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" target="_blank" rel="noopener noreferrer">បើក Link ដើម ↗</a>');
+ e.preventDefault(); let u;
+ try{u=new URL($('#url').value.trim());if(!['http:','https:'].includes(u.protocol))throw 0}
+ catch(e){showMessage('សូមបញ្ចូល Link ត្រឹមត្រូវដែលចាប់ផ្តើមដោយ https://');return}
+ const p=platform(u);
+ if(p==='other'){showMessage('សូមប្រើ Link ពី YouTube, TikTok, Facebook ឬ Telegram។');return}
+ showPlayer(u,p);
 });
 </script>
 </body>
